@@ -1,6 +1,11 @@
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || process.env.SESSION_SECRET || 'aftaar-secret-key-2024';
+const JWT_SECRET = process.env.SESSION_SECRET;
+
+if (!JWT_SECRET) {
+  console.error('SESSION_SECRET environment variable is required for JWT signing');
+  process.exit(1);
+}
 
 const generateToken = (role) => {
   return jwt.sign({ role }, JWT_SECRET, { expiresIn: '7d' });

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import Layout from '@/components/Layout';
 import StatCard from '@/components/StatCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -8,8 +9,9 @@ import api from '@/utils/api';
 import { formatCurrency, formatDate } from '@/utils/formatters';
 import Link from 'next/link';
 
-export default function ParticipantProfilePage({ params }) {
-  const { id } = use(params);
+export default function ParticipantProfilePage() {
+  const params = useParams();
+  const id = params.id;
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('deposits');

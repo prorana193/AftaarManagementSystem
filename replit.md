@@ -8,7 +8,7 @@ A production-ready Aftaar expense tracking system with participant management, d
 - **Styling**: Tailwind CSS + DaisyUI (custom "aftaar" theme)
 - **Backend**: Express.js on port 3001
 - **Database**: MongoDB with Mongoose ODM
-- **Auth**: JWT-based role system (admin/user)
+- **Auth**: JWT-based role system (admin/user), signed with SESSION_SECRET
 
 ## Project Structure
 ```
@@ -32,16 +32,16 @@ A production-ready Aftaar expense tracking system with participant management, d
   /models             - Mongoose schemas (Participant, Deposit, AftaarEntry)
   /controllers        - Business logic
   /routes             - API endpoints
-  /middleware          - Auth, error handling
+  /middleware          - Auth (JWT), error handling
   server.js           - Entry point
 ```
 
 ## Environment Variables
 - `MONGODB_URI` - MongoDB connection string (secret)
-- `ADMIN_PASSWORD` - Admin login password
-- `USER_PASSWORD` - Viewer login password
-- `PORT` - Backend port (3001)
-- `SESSION_SECRET` - JWT secret
+- `SESSION_SECRET` - JWT signing secret (secret)
+- `ADMIN_PASSWORD` - Admin login password (default: admin123)
+- `USER_PASSWORD` - Viewer login password (default: user123)
+- `PORT` - Backend port (default: 3001)
 
 ## Workflows
 - **Frontend**: `cd frontend && npm run dev` (port 5000, webview)
@@ -50,5 +50,18 @@ A production-ready Aftaar expense tracking system with participant management, d
 ## API Proxy
 Next.js rewrites `/api/*` requests to `http://localhost:3001/api/*`
 
+## Key Features
+- Role-based access: Admin (full CRUD), User (read-only)
+- Participant management with safe deletion (deactivate if has history)
+- Daily Aftaar entries with automatic per-person expense splitting
+- Deposit tracking per participant
+- Detailed participant profile pages with transaction history
+- PDF report generation with jsPDF
+- Responsive design with mobile sidebar
+
 ## Recent Changes
-- 2026-02-23: Initial build with App Router structure
+- 2026-02-23: Initial build with full-stack architecture
+- 2026-02-23: Fixed participant profile page (use useParams instead of use(params))
+- 2026-02-23: Improved security - JWT secret uses SESSION_SECRET env var, removed hardcoded fallback
+- 2026-02-23: Added participant validation in Aftaar entry creation (checks active status)
+- 2026-02-23: Enhanced MongoDB connection error handling

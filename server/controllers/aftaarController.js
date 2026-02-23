@@ -12,6 +12,17 @@ const createAftaarEntry = async (req, res) => {
       });
     }
 
+    const validParticipants = await Participant.find({
+      _id: { $in: participantIds },
+      isActive: true,
+    });
+
+    if (validParticipants.length !== participantIds.length) {
+      return res.status(400).json({
+        message: 'One or more participants are invalid or inactive.',
+      });
+    }
+
     const perPersonShare = Math.round((Number(totalBill) / participantIds.length) * 100) / 100;
 
     const participants = participantIds.map((id) => ({
