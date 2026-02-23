@@ -5,8 +5,8 @@ expertMode = true
 [userenv]
 
 [userenv.shared]
-ADMIN_PASSWORD = "admin123"
-USER_PASSWORD = "user123"
+ADMIN_PASSWORD = "Earthmoon@2025"
+USER_PASSWORD = "user@123"
 PORT = "3001"
 
 [workflows]
