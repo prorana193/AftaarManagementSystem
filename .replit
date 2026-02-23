@@ -58,6 +58,6 @@ localPort = 5000
 externalPort = 80
 
 [deployment]
-deploymentTarget = "autoscale"
+deploymentTarget = "vm"
 run = ["bash", "-c", "cd /home/runner/workspace/server && node server.js & cd /home/runner/workspace/frontend && npm start"]
 build = ["bash", "-c", "cd /home/runner/workspace/frontend && npm run build"]
