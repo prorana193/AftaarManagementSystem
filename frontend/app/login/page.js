@@ -1,9 +1,10 @@
+'use client';
+
 import { useState } from 'react';
-import { useRouter } from 'next/router';
-import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 import api from '@/utils/api';
 
-export default function Login() {
+export default function LoginPage() {
   const router = useRouter();
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('admin');
@@ -17,8 +18,8 @@ export default function Login() {
 
     try {
       const { data } = await api.post('/auth/login', { password, role });
-      Cookies.set('token', data.token, { expires: 7 });
-      Cookies.set('role', data.role, { expires: 7 });
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('role', data.role);
       router.push('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
@@ -28,7 +29,7 @@ export default function Login() {
   };
 
   return (
-    <div data-theme="aftaar" className="min-h-screen bg-base-200 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-base-200 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-primary">Aftaar Manager</h1>

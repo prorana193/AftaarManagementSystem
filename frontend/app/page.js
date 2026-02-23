@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import Layout from '@/components/Layout';
 import StatCard from '@/components/StatCard';
@@ -6,10 +8,9 @@ import api from '@/utils/api';
 import { formatCurrency, formatDate } from '@/utils/formatters';
 import Link from 'next/link';
 
-export default function Dashboard() {
+export default function DashboardPage() {
   const [participants, setParticipants] = useState([]);
   const [entries, setEntries] = useState([]);
-  const [deposits, setDeposits] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,14 +19,12 @@ export default function Dashboard() {
 
   const fetchData = async () => {
     try {
-      const [pRes, eRes, dRes] = await Promise.all([
+      const [pRes, eRes] = await Promise.all([
         api.get('/participants'),
         api.get('/aftaar'),
-        api.get('/deposits'),
       ]);
       setParticipants(pRes.data);
       setEntries(eRes.data);
-      setDeposits(dRes.data);
     } catch (err) {
       console.error('Error fetching data:', err);
     } finally {

@@ -1,21 +1,23 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import Layout from '@/components/Layout';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import api from '@/utils/api';
 import { formatCurrency } from '@/utils/formatters';
 import Link from 'next/link';
-import Cookies from 'js-cookie';
 
-export default function Participants() {
+export default function ParticipantsPage() {
   const [participants, setParticipants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [newName, setNewName] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const role = Cookies.get('role');
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
+    setRole(localStorage.getItem('role'));
     fetchParticipants();
   }, []);
 

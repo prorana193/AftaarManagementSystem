@@ -1,18 +1,19 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import Layout from '@/components/Layout';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import api from '@/utils/api';
 import { formatCurrency, formatDate } from '@/utils/formatters';
-import Cookies from 'js-cookie';
 
-export default function Aftaar() {
+export default function AftaarPage() {
   const [entries, setEntries] = useState([]);
   const [participants, setParticipants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const role = Cookies.get('role');
+  const [role, setRole] = useState(null);
 
   const [form, setForm] = useState({
     date: new Date().toISOString().split('T')[0],
@@ -22,6 +23,7 @@ export default function Aftaar() {
   });
 
   useEffect(() => {
+    setRole(localStorage.getItem('role'));
     fetchData();
   }, []);
 
@@ -50,10 +52,7 @@ export default function Aftaar() {
   };
 
   const selectAll = () => {
-    setForm((prev) => ({
-      ...prev,
-      participantIds: participants.map((p) => p._id),
-    }));
+    setForm((prev) => ({ ...prev, participantIds: participants.map((p) => p._id) }));
   };
 
   const deselectAll = () => {
@@ -70,12 +69,7 @@ export default function Aftaar() {
     setError('');
     try {
       await api.post('/aftaar', form);
-      setForm({
-        date: new Date().toISOString().split('T')[0],
-        totalBill: '',
-        participantIds: [],
-        note: '',
-      });
+      setForm({ date: new Date().toISOString().split('T')[0], totalBill: '', participantIds: [], note: '' });
       setShowModal(false);
       fetchData();
     } catch (err) {
@@ -170,25 +164,11 @@ export default function Aftaar() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="form-control">
                   <label className="label"><span className="label-text">Date</span></label>
-                  <input
-                    type="date"
-                    value={form.date}
-                    onChange={(e) => setForm({ ...form, date: e.target.value })}
-                    className="input input-bordered input-sm w-full"
-                    required
-                  />
+                  <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className="input input-bordered input-sm w-full" required />
                 </div>
                 <div className="form-control">
                   <label className="label"><span className="label-text">Total Bill Amount</span></label>
-                  <input
-                    type="number"
-                    value={form.totalBill}
-                    onChange={(e) => setForm({ ...form, totalBill: e.target.value })}
-                    placeholder="0"
-                    className="input input-bordered input-sm w-full"
-                    min="1"
-                    required
-                  />
+                  <input type="number" value={form.totalBill} onChange={(e) => setForm({ ...form, totalBill: e.target.value })} placeholder="0" className="input input-bordered input-sm w-full" min="1" required />
                 </div>
               </div>
 
@@ -204,12 +184,7 @@ export default function Aftaar() {
                 <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto border rounded-lg p-3">
                   {participants.map((p) => (
                     <label key={p._id} className="flex items-center gap-2 cursor-pointer py-1">
-                      <input
-                        type="checkbox"
-                        checked={form.participantIds.includes(p._id)}
-                        onChange={() => toggleParticipant(p._id)}
-                        className="checkbox checkbox-sm checkbox-primary"
-                      />
+                      <input type="checkbox" checked={form.participantIds.includes(p._id)} onChange={() => toggleParticipant(p._id)} className="checkbox checkbox-sm checkbox-primary" />
                       <span className="text-sm">{p.name}</span>
                     </label>
                   ))}
@@ -225,13 +200,7 @@ export default function Aftaar() {
 
               <div className="form-control">
                 <label className="label"><span className="label-text">Note (optional)</span></label>
-                <input
-                  type="text"
-                  value={form.note}
-                  onChange={(e) => setForm({ ...form, note: e.target.value })}
-                  placeholder="Optional note"
-                  className="input input-bordered input-sm w-full"
-                />
+                <input type="text" value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} placeholder="Optional note" className="input input-bordered input-sm w-full" />
               </div>
 
               {error && <p className="text-error text-sm">{error}</p>}
