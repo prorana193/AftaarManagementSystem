@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
 import Layout from '@/components/Layout';
 import StatCard from '@/components/StatCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -30,9 +32,6 @@ export default function ReportsPage() {
   const generatePDF = async () => {
     setGenerating(true);
     try {
-      const { jsPDF } = await import('jspdf');
-      await import('jspdf-autotable');
-
       const doc = new jsPDF();
       const pageWidth = doc.internal.pageSize.getWidth();
 
