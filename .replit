@@ -60,4 +60,4 @@ externalPort = 80
 [deployment]
 deploymentTarget = "vm"
 run = ["bash", "-c", "cd /home/runner/workspace/server && node server.js & cd /home/runner/workspace/frontend && npm start"]
-build = ["bash", "-c", "cd /home/runner/workspace/frontend && npm run build"]
+build = ["bash", "-c", "cd /home/runner/workspace/server && npm install && cd /home/runner/workspace/frontend && npm install && npm run build"]
