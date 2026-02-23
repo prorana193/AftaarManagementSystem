@@ -6,7 +6,6 @@ import StatCard from '@/components/StatCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import api from '@/utils/api';
 import { formatCurrency, formatDate } from '@/utils/formatters';
-import { generateReport } from '@/utils/generatePDF';
 
 export default function ReportsPage() {
   const [report, setReport] = useState(null);
@@ -31,7 +30,20 @@ export default function ReportsPage() {
   const handleGeneratePDF = async () => {
     setGenerating(true);
     try {
-      await generateReport(report);
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      const response = await fetch('/api/reports/pdf', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error('Failed to generate PDF');
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'aftaar-report.pdf';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Error generating PDF:', err);
       alert('Error generating PDF. Please try again.');
