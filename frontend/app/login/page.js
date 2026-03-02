@@ -11,22 +11,36 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+ const handleLogin = async (e) => {
+  e.preventDefault(); // prevent page refresh
+  setError('');
+  setLoading(true);
 
-    try {
-      const { data } = await api.post('/auth/login', { password, role });
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('role', data.role);
-      router.push('/');
-    } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
-    } finally {
-      setLoading(false);
+  try {
+    // send login request
+    const res = await api.post('/auth/login', { password, role });
+
+    // check if login was successful
+    if (!res.data || !res.data.token || !res.data.role) {
+      // wrong password or invalid response
+      setError('Incorrect password or role. Please try again.');
+      return; // stop execution, do not set token or navigate
     }
-  };
+
+    // login successful
+    localStorage.setItem('token', res.data.token);
+    localStorage.setItem('role', res.data.role);
+
+    // navigate to homepage
+    router.push('/');
+  } catch (err) {
+    console.error('Login error:', err);
+    // display backend error message or fallback
+    setError(err.response?.data?.message || 'Login failed. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-base-200 flex items-center justify-center p-4">
@@ -89,7 +103,11 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className={`btn w-full ${role === 'admin' ? 'btn-primary' : 'bg-secondary hover:bg-secondary/90 text-white border-0'}`}
+              className={`btn w-full ${
+                role === 'admin'
+                  ? 'btn-primary'
+                  : 'bg-secondary hover:bg-secondary/90 text-white border-0'
+              }`}
             >
               {loading ? <span className="loading loading-spinner loading-sm"></span> : 'Sign In'}
             </button>

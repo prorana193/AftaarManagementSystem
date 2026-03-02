@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const { generateToken } = require('../middleware/auth');
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Earthmoon@2025';
 const USER_PASSWORD = process.env.USER_PASSWORD || 'user123';
 
 const login = async (req, res) => {
@@ -35,7 +35,7 @@ const login = async (req, res) => {
 };
 
 const verifySession = async (req, res) => {
-  res.json({ role: req.user.role, valid: true });
+  res.status(200).json({ role: req.user.role, valid: true });
 };
 
 module.exports = { login, verifySession };
