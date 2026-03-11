@@ -8,7 +8,8 @@ require('dotenv').config();
 
 const app = express();
 
-app.use(cors({ origin: 'https://ams.codewithabdullah.site', 
+app.use(cors({ origin: ['https://ams.codewithabdullah.site',
+'https://ams.codewithabdullah.online'], 
    methods: ['GET','POST','PUT','DELETE'],
     credentials: true
 }))
